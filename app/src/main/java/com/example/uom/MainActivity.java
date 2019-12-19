@@ -19,7 +19,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -129,11 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         for (int i = 0; i < coursesElements.size(); i++)
                             courses.add(new Course(coursesElements.get(i)));
 
-                        final List<String> lessons = new ArrayList<>();
-                        for (int i = 0; i < coursesElements.size(); i++)
-                            lessons.add(courses.get(i).getTitle());
-                        //ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, lessons);
-                        //lessonsListView.setAdapter(adapter);
                         CourseAdapter adapter = new CourseAdapter(getApplicationContext(), courses);
                         lessonsListView.setAdapter(adapter);
 
