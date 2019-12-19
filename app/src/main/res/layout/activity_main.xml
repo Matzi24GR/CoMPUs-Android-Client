@@ -1,40 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <LinearLayout
+
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:elevation="1dp"
         android:layout_margin="16dp"
-        android:elevation="10dp"
-        android:background="#fff">
+        app:cardCornerRadius="14dp">
 
-        <EditText
-            android:id="@+id/username_textview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textAutoComplete"
-            android:hint="Όνομα Χρήστη"/>
+            android:orientation="vertical"
+            android:layout_margin="8dp">
 
-        <EditText
-            android:id="@+id/password_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:hint="Κωδικός"/>
+            <EditText
+                android:id="@+id/username_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textAutoComplete"
+                android:hint="Όνομα Χρήστη"/>
 
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Είσοδος"
-            android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/password_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:hint="Κωδικός"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_text"
+                    android:text="Χρήστης :"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:layout_margin="4dp"/>
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Είσοδος"
+                    android:layout_margin="4dp" />
 
-    </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
 
     <View
         android:layout_width="match_parent"
@@ -46,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:id="@+id/recycler_view"/>
+        android:id="@+id/recycler_view" />
 
     <WebView
         android:layout_width="match_parent"

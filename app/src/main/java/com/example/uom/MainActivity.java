@@ -9,6 +9,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText usrText = findViewById(R.id.username_textview);
         final EditText passwdText = findViewById(R.id.password_textview);
+        final TextView userText = findViewById(R.id.user_text);
         final Button loginButton = findViewById(R.id.login_button);
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         final WebView  webView = findViewById(R.id.webView);
@@ -60,24 +62,16 @@ public class MainActivity extends AppCompatActivity {
             protected Document doInBackground(Void... voids) {
                 String url="https://compus.uom.gr/modules/auth/login.php";
                 try {
-                    Connection.Response loginForm = Jsoup
-                            .connect(url)
-                            .method(Connection.Method.GET)
-                            .execute();
-
                     Connection.Response response = Jsoup.connect(url)
                             .data("uname",username)
                             .data("pass",password)
                             .data("login","submit")
-                            .cookies(loginForm.cookies())
                             .method(Connection.Method.POST)
                             .execute();
                     doc = Jsoup.parse(response.body());
                 } catch (IOException e){
                     e.printStackTrace();
                 }
-
-
                 return doc;
             }
 
@@ -91,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     if (html.contains("Τα Μαθήματά Μου")) {
                         //Show User Name
                         String user = Jsoup.parse(html).select("td[class=info_user]").text();
-                        Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
+                        userText.setText(user);
 
                         //Parse Courses
                         final ArrayList<Course> courses = new ArrayList<>();
