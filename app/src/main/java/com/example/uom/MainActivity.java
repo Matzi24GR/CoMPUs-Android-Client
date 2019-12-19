@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -125,15 +124,17 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
 
 
-                        List<Course> courses = new ArrayList<>();
+                        ArrayList<Course> courses = new ArrayList<>();
                         Elements coursesElements = doc.select("td[class=external_table]");
                         for (int i = 0; i < coursesElements.size(); i++)
                             courses.add(new Course(coursesElements.get(i)));
 
-                        List<String> lessons = new ArrayList<>();
+                        final List<String> lessons = new ArrayList<>();
                         for (int i = 0; i < coursesElements.size(); i++)
                             lessons.add(courses.get(i).getTitle());
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, lessons);
+                        //ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, lessons);
+                        //lessonsListView.setAdapter(adapter);
+                        CourseAdapter adapter = new CourseAdapter(getApplicationContext(), courses);
                         lessonsListView.setAdapter(adapter);
 
                     } else if (html.contains("Η Είσοδος Απέτυχε")) {
@@ -156,6 +157,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }
