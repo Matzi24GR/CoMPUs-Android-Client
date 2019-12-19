@@ -3,6 +3,7 @@ package com.example.uom;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +20,9 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
 
         this.context = context;
 
-        this.titleText = (TextView) itemView.findViewById(R.id.title_text);
-        this.profText = (TextView) itemView.findViewById(R.id.profs_text);
-        this.semesterText = (TextView) itemView.findViewById(R.id.semester_text);
+        this.titleText =  itemView.findViewById(R.id.title_text);
+        this.profText = itemView.findViewById(R.id.profs_text);
+        this.semesterText = itemView.findViewById(R.id.semester_text);
 
         itemView.setOnClickListener(this);
     }
@@ -29,13 +30,13 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
         this.course = course;
         this.titleText.setText(course.getTitle());
         this.profText.setText(course.getProfs());
-        this.semesterText.setText(Integer.toString(course.getSemester()));
+        this.semesterText.setText(String.format(Integer.toString(course.getSemester()),"%d"));
     }
 
     @Override
     public void onClick(View v) {
         if (this.course != null) {
-
+            Toast.makeText(context, course.getUrl(), Toast.LENGTH_SHORT).show();
         }
     }
 

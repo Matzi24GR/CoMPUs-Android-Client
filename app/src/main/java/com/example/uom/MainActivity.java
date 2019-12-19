@@ -23,11 +23,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -41,44 +36,13 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         final WebView  webView = findViewById(R.id.webView);
 
+        new AllTrustingTrustManager();
 
-        /*/////////////////////////////////////////////////////////////////////////////
-         *
-         * Probably a very bad solution
-         *
-         * */
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-            }
-
-            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
-            }
-        } };
-
-
-        // Install the all-trusting trust manager
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        ///////////////////////////////////////////////////////////////////////////////
-
-        Document doc;
-        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         class Login extends AsyncTask<Void, Void, Document> {
-
-            Document doc;
-            String url="https://compus.uom.gr/modules/auth/login.php";
-            String username;
-            String password;
+            private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+            private Document doc;
+            private String username;
+            private String password;
 
             @Override
             protected void onPreExecute() {
@@ -94,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected Document doInBackground(Void... voids) {
-
+                String url="https://compus.uom.gr/modules/auth/login.php";
                 try {
                     Connection.Response loginForm = Jsoup
                             .connect(url)
@@ -121,18 +85,21 @@ public class MainActivity extends AppCompatActivity {
             protected void onPostExecute(Document doc) {
                 super.onPostExecute(doc);
                 try {
+
                     String html = doc.toString();
 
                     if (html.contains("Τα Μαθήματά Μου")) {
+                        //Show User Name
                         String user = Jsoup.parse(html).select("td[class=info_user]").text();
                         Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
 
-
+                        //Parse Courses
                         final ArrayList<Course> courses = new ArrayList<>();
                         Elements coursesElements = doc.select("td[class=external_table]");
                         for (int i = 0; i < coursesElements.size(); i++)
                             courses.add(new Course(coursesElements.get(i)));
 
+                        //Display Courses
                         CourseAdapter adapter = new CourseAdapter(getApplicationContext(),R.layout.course_item, courses);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                         recyclerView.setLayoutManager(linearLayoutManager);
@@ -141,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (html.contains("Η Είσοδος Απέτυχε")) {
                         Toast.makeText(getApplicationContext(), "Wrong Username/Password", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Unknown", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Unknown Error", Toast.LENGTH_SHORT).show();
                     }
                 } catch (NullPointerException e){
                     Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 public class Course {
     private String Title;
     private String Profs;
+    private String Code;
     private int Semester;
     private boolean Active;
     private String Url;
