@@ -1,31 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginStart="10dp"
+    android:elevation="1dp">
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_weight="2">
-        <TextView
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="12dp">
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/title_text"
-            android:textSize="12sp"
-            tools:text="ΑΛΓΟΡΙΘΜΟΙ"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/profs_text"
-            tools:text="Σαμαράς Νικόλαος"
-            android:textSize="12sp"/>
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                tools:text="ΑΛΓΟΡΙΘΜΟΙ"
+                android:textColor="#000"/>
+            <TextView
+                android:id="@+id/profs_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                tools:text="Σαμαράς Νικόλαος"/>
 
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/semester_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="1o"/>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/semester_text"
-        tools:text="1o"/>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

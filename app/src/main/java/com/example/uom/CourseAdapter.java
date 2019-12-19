@@ -4,34 +4,43 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class CourseAdapter extends ArrayAdapter<Course> {
-    CourseAdapter(Context context, ArrayList<Course> courses) {
-        super(context, 0, courses);
+public class CourseAdapter extends RecyclerView.Adapter<CourseHolder> {
+    private final ArrayList<Course> courses;
+    private Context context;
+    private int itemResource;
+
+    public CourseAdapter(Context context, int itemResource, ArrayList<Course> courses) {
+        this.courses = courses;
+        this.context = context;
+        this.itemResource = itemResource;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.course_item, parent, false);
-        }
-
-        TextView titleTextView = listItemView.findViewById(R.id.title_text);
-        TextView profsTextView = listItemView.findViewById(R.id.profs_text);
-        TextView semesterTextView = listItemView.findViewById(R.id.semester_text);
-
-        Course currentCourse = getItem(position);
-
-        titleTextView.setText(currentCourse.getTitle());
-        profsTextView.setText(currentCourse.getProfs());
-        semesterTextView.setText(Integer.toString(currentCourse.getSemester()));
-
-        return listItemView;
+    public CourseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(this.itemResource, parent, false);
+        return new CourseHolder(this.context, view);
     }
+
+    @Override
+    public void onBindViewHolder(CourseHolder holder, int position) {
+
+        // 5. Use position to access the correct Bakery object
+        Course course = this.courses.get(position);
+
+        // 6. Bind the bakery object to the holder
+        holder.bindCourse(course);
+    }
+
+    @Override
+    public int getItemCount() {
+
+        return this.courses.size();
+    }
+
 }

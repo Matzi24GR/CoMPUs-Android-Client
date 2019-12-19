@@ -22,7 +22,7 @@ public class Course {
 
     String  getTitle()    {return Title;}
     String  getProfs()    {return Profs;}
-    String  getmUrl()     {return Url;}
+    String  getUrl()     {return Url;}
     int     getSemester() {return Semester;}
     boolean isActive()    {return Active;}
 

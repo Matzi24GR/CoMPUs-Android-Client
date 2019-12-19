@@ -42,10 +42,17 @@
         android:background="@android:color/black"
         android:layout_margin="16dp"/>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:id="@+id/lessonsListView"/>
+        android:id="@+id/recycler_view"/>
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/webView"
+        android:visibility="gone"/>
 
 </LinearLayout>
