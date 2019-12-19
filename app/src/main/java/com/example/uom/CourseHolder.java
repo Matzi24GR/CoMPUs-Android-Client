@@ -11,6 +11,7 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
     private final TextView titleText;
     private final TextView profText;
     private final TextView semesterText;
+    private final TextView codeText;
 
     private Course course;
     private Context context;
@@ -23,6 +24,7 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
         this.titleText =  itemView.findViewById(R.id.title_text);
         this.profText = itemView.findViewById(R.id.profs_text);
         this.semesterText = itemView.findViewById(R.id.semester_text);
+        this.codeText = itemView.findViewById(R.id.code_text);
 
         itemView.setOnClickListener(this);
     }
@@ -31,6 +33,7 @@ public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClic
         this.titleText.setText(course.getTitle());
         this.profText.setText(course.getProfs());
         this.semesterText.setText(String.format(Integer.toString(course.getSemester()),"%d"));
+        this.codeText.setText(course.getCode());
     }
 
     @Override

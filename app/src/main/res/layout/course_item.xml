@@ -38,9 +38,19 @@
         </LinearLayout>
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="INF420"
+            android:paddingTop="4dp"
+            android:id="@+id/code_text">
+        </TextView>
+
+        <TextView
             android:id="@+id/semester_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="1o"/>
+            tools:text="1o"
+            android:layout_marginTop="20dp"
+            android:padding="4dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
