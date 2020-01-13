@@ -1,10 +1,10 @@
 package com.example.uom
 
-import android.webkit.CookieManager
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.io.IOException
@@ -29,12 +29,7 @@ suspend fun getCookieFunc(username: String? ,password: String?): String? {
     }.await()
 }
 fun login (username: String? ,password: String?): String? {
-    var cookie: String? = null
-    GlobalScope.launch (Dispatchers.Main) {
-        cookie = getCookieFunc(username, password)
-
-    }
-    if (cookie != null)
-        CookieManager.getInstance().setCookie("http://compus.uom.gr", "PHPSESSID=$cookie")
+    val cookie: String? = runBlocking { getCookieFunc(username, password) }
+    Log.i("Cookie",cookie!!)
     return cookie
 }

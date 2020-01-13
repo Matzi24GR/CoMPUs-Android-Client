@@ -5,7 +5,6 @@ import android.accounts.AccountManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,32 +96,6 @@ class AllCoursesFragment : Fragment() {
             return courses
         }
 
-        suspend fun getAnnouncements(cookie: String,courses: ArrayList<Course>){
-            return GlobalScope.async(Dispatchers.IO) {
-                try {
-                    Jsoup.connect(courses[6].url)
-                            .cookie("PHPSESSID",cookie)
-                            .method(Connection.Method.GET)
-                            .execute()
-                    val response = Jsoup.connect("http://compus.uom.gr/modules/anns/anns.php")
-                            .cookie("PHPSESSID",cookie)
-                            .method(Connection.Method.GET)
-                            .execute()
-
-                    val document = response.parse()
-                    val announcements = ArrayList<String>()
-                    val announcementElements = document!!.select("div")
-                    for (i in announcementElements.indices) {
-                        announcements.add(announcementElements[i].text())
-                        Log.i("Announcement",announcementElements[i].text())
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                return@async
-            }.await()
-        }
-
         loginButton.setOnClickListener {
             GlobalScope.launch  (Dispatchers.Main) {
                 val username = usrText.text.toString()
@@ -137,7 +110,6 @@ class AllCoursesFragment : Fragment() {
                     val document = fetchHome(cookie)
                     if (document != null) {
                         val courses = showHome(document)
-                        getAnnouncements(cookie, courses)
                     }
                 } else
                     Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
