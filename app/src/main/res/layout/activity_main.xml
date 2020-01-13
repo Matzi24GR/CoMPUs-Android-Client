@@ -1,82 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <androidx.cardview.widget.CardView
+        android:id="@+id/LoginView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="1dp"
         android:layout_margin="16dp"
-        app:cardCornerRadius="14dp">
+        android:elevation="1dp"
+        app:cardCornerRadius="14dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/username_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textAutoComplete"
-                android:hint="Όνομα Χρήστη"/>
+                android:hint="Όνομα Χρήστη"
+                android:inputType="textAutoComplete" />
 
             <EditText
                 android:id="@+id/password_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPassword"
-                android:hint="Κωδικός"/>
+                android:hint="Κωδικός"
+                android:inputType="textPassword" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="1">
+
                 <TextView
+                    android:id="@+id/user_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/user_text"
-                    android:text="Χρήστης :"
-                    android:layout_weight="1"
                     android:layout_gravity="bottom"
-                    android:layout_margin="4dp"/>
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:text="Χρήστης :" />
+
                 <Button
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Είσοδος"
-                    android:layout_margin="4dp" />
+                    android:layout_margin="4dp"
+                    android:text="Είσοδος" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
-
     <View
+        android:id="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/black"
-        android:layout_margin="16dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/LoginView"
+        android:layout_margin="12dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <fragment
+        android:id="@+id/fragNavHost"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:id="@+id/recycler_view" />
+        app:defaultNavHost="true"
+        android:layout_margin="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintTop_toBottomOf="@+id/separator"
+        app:navGraph="@navigation/bottom_nav_graph" />
 
-    <WebView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/webView"
-        android:visibility="gone"/>
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        app:itemIconTint="@color/colorAccent"
+        app:itemTextColor="@color/cardview_light_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/botton_nav_menu" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
