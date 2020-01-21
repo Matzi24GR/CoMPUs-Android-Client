@@ -3,18 +3,28 @@ package com.example.uom
 
 import android.accounts.AccountManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Database.Announcement
+import com.example.uom.Database.UomDatabase
+import com.example.uom.viewmodel.AnnouncementViewModel
 import kotlinx.coroutines.*
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class AnnouncementsFragment : Fragment() {
 
@@ -28,7 +38,21 @@ class AnnouncementsFragment : Fragment() {
         val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
         val listView = view.findViewById<ListView>(R.id.list_view)
 
+        val recyclerView = view.findViewById<RecyclerView>(R.id.announcementsRecyclerView)
 
+        val adapter = AnnouncementsListAdapter(this.context!!)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+
+        val announcementViewModel = ViewModelProviders.of(this)[AnnouncementViewModel::class.java]
+
+        announcementViewModel.allAnnouncements.observe(this, Observer { announcements ->
+            announcements?.let { adapter.setAnnouncements(it) }
+        })
+
+        val dao = UomDatabase.getDatabase(this.requireContext()).AnnouncementDAO()
+        //GlobalScope.launch { dao.deleteAll() }
 
         suspend fun getAnnouncements(cookie: String, courses: ArrayList<Course>, id: Int): Document? {
             return GlobalScope.async(Dispatchers.IO) {
@@ -97,12 +121,16 @@ class AnnouncementsFragment : Fragment() {
                             val announcementElements = document2!!.select("div")
                             for (j in announcementElements.indices) {
                                 var  text : String = announcementElements[j].text().replace("!@#$","\n").replace("\\d\\d.\\d\\d.\\d\\d\\d\\d\\n\\d\\d:\\d\\d Τελευταία Ενημέρωση:".toRegex(),"")
-                                val date = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
-                                Log.i("Date",date)
+                                val dateS = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
+
                                 text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(),"")
-                                val complete = date +" - "+ courses[i].title +"\n\n" + text
+                                val complete = dateS +" - "+ courses[i].title +"\n\n" + text
                                 announcements.add(complete)
                                 adapter.notifyDataSetChanged()
+
+                                val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+                                val date = dateFormat.parse(dateS)!!
+                                announcementViewModel.insert(Announcement(complete,date.time,courses[i].title))
                             }
 
 
