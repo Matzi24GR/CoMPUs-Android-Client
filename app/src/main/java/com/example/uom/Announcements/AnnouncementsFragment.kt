@@ -1,21 +1,23 @@
-package com.example.uom
+package com.example.uom.Announcements
 
 
-import android.accounts.AccountManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.CookieManager
-import android.widget.*
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Courses.Course
 import com.example.uom.Database.Announcement
 import com.example.uom.Database.UomDatabase
-import com.example.uom.viewmodel.AnnouncementViewModel
+import com.example.uom.R
 import kotlinx.coroutines.*
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -32,13 +34,12 @@ class AnnouncementsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_announcements, container, false)
 
-
-        val usrText = getActivity()!!.findViewById<EditText>(R.id.username_textview)
-        val passwdText = getActivity()!!.findViewById<EditText>(R.id.password_textview)
+        val userText = getActivity()!!.findViewById<TextView>(R.id.user_text)
         val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
-        val listView = view.findViewById<ListView>(R.id.list_view)
-
+        val progressBar = activity!!.findViewById<ProgressBar>(R.id.progress_bar)
         val recyclerView = view.findViewById<RecyclerView>(R.id.announcementsRecyclerView)
+
+        val cookie = activity!!.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE).getString("cookie", null)
 
         val adapter = AnnouncementsListAdapter(this.context!!)
         recyclerView.adapter = adapter
@@ -93,6 +94,9 @@ class AnnouncementsFragment : Fragment() {
         }
 
         fun showHome(document: Document): ArrayList<Course> {
+            //Show User Name
+            val user = document.select("td[class=info_user]").text()
+            userText.text = user
             //Parse Courses
             val courses = ArrayList<Course>()
             val coursesElements = document.select("td[class=external_table]")
@@ -102,44 +106,41 @@ class AnnouncementsFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
-            val cookie = login(usrText.text.toString(), passwdText.text.toString())
-            if (cookie != null) {
-                AccountManager.get(context)
-                CookieManager.getInstance().setCookie("http://compus.uom.gr", "PHPSESSID=$cookie")
-                GlobalScope.launch(Dispatchers.Main) {
-                    val document = fetchHome(cookie)
-                    if (document != null) {
-                        val courses = showHome(document)
-                        var announcements = ArrayList<String>()
-                        val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_list_item_1,announcements)
-                        listView.adapter = adapter
-                        for (i in 0 until courses.size) {
-                            var document2 = getAnnouncements(cookie, courses,i)
-                            var html = document2!!.html()
-                            html = html.replace("<br>","!@#$")
-                            document2 = Jsoup.parse(html)
-                            val announcementElements = document2!!.select("div")
-                            for (j in announcementElements.indices) {
-                                var  text : String = announcementElements[j].text().replace("!@#$","\n").replace("\\d\\d.\\d\\d.\\d\\d\\d\\d\\n\\d\\d:\\d\\d Τελευταία Ενημέρωση:".toRegex(),"")
-                                val dateS = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
+            progressBar.isIndeterminate = true
+            progressBar.visibility = View.VISIBLE
 
-                                text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(),"")
-                                val complete = dateS +" - "+ courses[i].title +"\n\n" + text
-                                announcements.add(complete)
-                                adapter.notifyDataSetChanged()
+            GlobalScope.launch(Dispatchers.Main) {
 
-                                val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-                                val date = dateFormat.parse(dateS)!!
-                                announcementViewModel.insert(Announcement(complete,date.time,courses[i].title))
-                            }
+                val document = fetchHome(cookie)
+                if (document != null) {
+                    val courses = showHome(document)
+                    progressBar.isIndeterminate = false
+                    progressBar.progress = 0
+                    progressBar.max = courses.size
 
+                    for (i in 0 until courses.size) {
+                        var document2 = getAnnouncements(cookie!!, courses, i) ?: continue
+                        var html = document2.html()
+                        html = html.replace("<br>", "!@#$")
+                        document2 = Jsoup.parse(html)
+                        val announcementElements = document2.select("div")
+                        for (j in announcementElements.indices) {
+                            var text: String = announcementElements[j].text().replace("!@#$", "\n").replace("\\d\\d.\\d\\d.\\d\\d\\d\\d\\n\\d\\d:\\d\\d Τελευταία Ενημέρωση:".toRegex(), "")
+                            val dateS = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
 
+                            text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(), "")
+                            val complete = dateS + " - " + courses[i].title + "\n\n" + text
+                            adapter.notifyDataSetChanged()
+
+                            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+                            val date = dateFormat.parse(dateS)!!
+                            announcementViewModel.insert(Announcement(complete, date.time, courses[i].title))
                         }
-
+                        progressBar.incrementProgressBy(1)
                     }
+                    progressBar.visibility = View.GONE
                 }
-            } else
-                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+            }
         }
 
 

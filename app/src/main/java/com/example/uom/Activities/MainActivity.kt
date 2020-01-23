@@ -1,5 +1,6 @@
-package com.example.uom
+package com.example.uom.Activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +8,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.uom.R
+import com.example.uom.Utils.AllTrustingTrustManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -15,17 +18,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
+        if (sharedPreferences.getString("username",null) == null) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
         AllTrustingTrustManager()
-        fun setupViews() {
-            // Finding the Navigation Controller
-            var navController = findNavController(R.id.fragNavHost)
 
-            // Setting Navigation Controller with the BottomNavigationView
-            bottomNavView.setupWithNavController(navController)
-        }
-        setupViews()
+        // Finding the Navigation Controller
+        val navController = findNavController(R.id.fragNavHost)
+        // Setting Navigation Controller with the BottomNavigationView
+        bottomNavView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

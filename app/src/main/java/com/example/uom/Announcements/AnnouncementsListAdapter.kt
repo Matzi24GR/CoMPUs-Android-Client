@@ -1,4 +1,4 @@
-package com.example.uom
+package com.example.uom.Announcements
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uom.Database.Announcement
+import com.example.uom.R
 
 class AnnouncementsListAdapter internal constructor(context: Context): RecyclerView.Adapter<AnnouncementsListAdapter.AnnouncementViewHolder>(){
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -22,7 +23,7 @@ class AnnouncementsListAdapter internal constructor(context: Context): RecyclerV
 
     override fun onBindViewHolder(holder: AnnouncementViewHolder, position: Int) {
         val current = announcements[position]
-        holder.announcementItemView.text = current.announcement
+        holder.announcementItemView.text = current.text
     }
 
     internal fun setAnnouncements(announcements: List<Announcement>) {

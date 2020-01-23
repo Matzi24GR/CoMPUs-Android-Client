@@ -15,26 +15,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/username_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Όνομα Χρήστη"
-                android:inputType="textAutoComplete" />
-
-            <EditText
-                android:id="@+id/password_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Κωδικός"
-                android:inputType="textPassword" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +26,7 @@
                     android:id="@+id/user_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:text="Χρήστης :" />
@@ -59,7 +39,6 @@
                     android:text="Είσοδος" />
 
             </LinearLayout>
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <View
@@ -70,6 +49,15 @@
         app:layout_constraintTop_toBottomOf="@+id/LoginView"
         android:layout_margin="12dp"/>
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@android:style/Widget.Material.ProgressBar.Horizontal"
+        android:id="@+id/progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/separator"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
     <fragment
         android:id="@+id/fragNavHost"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -78,7 +66,7 @@
         app:defaultNavHost="true"
         android:layout_margin="12dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintTop_toBottomOf="@+id/separator"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar"
         app:navGraph="@navigation/bottom_nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

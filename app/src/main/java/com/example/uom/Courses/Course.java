@@ -1,4 +1,4 @@
-package com.example.uom;
+package com.example.uom.Courses;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ public class Course {
     private boolean Active;
     private String Url;
 
-    Course(Element element) {
+    public Course(Element element) {
         Title = element.select("a").text();
         Profs = element.select("b").text();
         Url = "http://compus.uom.gr/"+element.select("a").attr("href");
@@ -22,11 +22,11 @@ public class Course {
         Log.i("Course", "Title: "+Title +"  |  Profs: "+Profs+"  |  URL: "+Url+"  |  Semester: " + Semester+"  |  Active?: "+Active+"  |  Code: "+Code);
     }
 
-    String  getTitle()    {return Title;}
-    String  getProfs()    {return Profs;}
-    String  getUrl()      {return Url;}
-    String  getCode()     {return Code;}
-    int     getSemester() {return Semester;}
-    boolean isActive()    {return Active;}
+    public String  getTitle()    {return Title;}
+    public String  getProfs()    {return Profs;}
+    public String  getUrl()      {return Url;}
+    public String  getCode()     {return Code;}
+    public int     getSemester() {return Semester;}
+    public boolean isActive()    {return Active;}
 
 }

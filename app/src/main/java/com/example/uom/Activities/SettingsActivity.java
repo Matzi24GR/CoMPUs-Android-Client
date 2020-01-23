@@ -1,9 +1,11 @@
-package com.example.uom;
+package com.example.uom.Activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.uom.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.uom;
+package com.example.uom.Courses;
 
 import android.content.Context;
 import android.view.View;
@@ -6,6 +6,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.uom.R;
 
 public class CourseHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final TextView titleText;

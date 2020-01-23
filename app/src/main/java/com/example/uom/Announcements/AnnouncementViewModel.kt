@@ -1,4 +1,4 @@
-package com.example.uom.viewmodel
+package com.example.uom.Announcements
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

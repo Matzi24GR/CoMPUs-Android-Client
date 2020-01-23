@@ -1,21 +1,18 @@
-package com.example.uom
+package com.example.uom.Courses
 
 
-import android.accounts.AccountManager
-import android.content.Intent
-import android.net.Uri
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.CookieManager
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -32,33 +29,12 @@ class AllCoursesFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_all_courses, container, false)
 
-
-        val usrText = getActivity()!!.findViewById<EditText>(R.id.username_textview)
-        val passwdText = getActivity()!!.findViewById<EditText>(R.id.password_textview)
         val userText = getActivity()!!.findViewById<TextView>(R.id.user_text)
         val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
+        val progressBar = getActivity()!!.findViewById<ProgressBar>(R.id.progress_bar)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view2)
-        //val webView = findViewById<WebView>(R.id.webView2)
 
-        suspend fun login(username: String? ,password: String?): String? {
-            val url = "https://compus.uom.gr/modules/auth/login.php"
-            return GlobalScope.async(Dispatchers.IO) {
-                var cookie: String? = null
-                try {
-                    val response = Jsoup.connect(url)
-                            .data("uname", username)
-                            .data("pass", password)
-                            .data("login", "submit")
-                            .method(Connection.Method.POST)
-                            .execute()
-
-                    cookie = if (response.body().contains("Τα Μαθήματά Μου")) response.cookie("PHPSESSID") else null
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                return@async cookie
-            }.await()
-        }
+        val cookie = activity!!.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE).getString("cookie", null)
 
         suspend fun fetchHome(cookie: String?): Document? {
             val url = "https://compus.uom.gr/index.php"
@@ -97,23 +73,18 @@ class AllCoursesFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
-            GlobalScope.launch  (Dispatchers.Main) {
-                val username = usrText.text.toString()
-                val password = passwdText.text.toString()
-                if (username.contains("42069"))
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/dQw4w9WgXcQ")))
 
-                val cookie = login(username,password)
-                if (cookie != null) {
-                    AccountManager.get(context)
-                    CookieManager.getInstance().setCookie("http://compus.uom.gr","PHPSESSID=$cookie")
-                    val document = fetchHome(cookie)
-                    if (document != null) {
-                        val courses = showHome(document)
-                    }
-                } else
-                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+            GlobalScope.launch  (Dispatchers.Main) {
+                progressBar.isIndeterminate = true
+                progressBar.visibility = View.VISIBLE
+
+                val document = fetchHome(cookie)
+                if (document != null) {
+                    val courses = showHome(document)
+                }
+                progressBar.visibility = View.GONE
             }
+
         }
 
 

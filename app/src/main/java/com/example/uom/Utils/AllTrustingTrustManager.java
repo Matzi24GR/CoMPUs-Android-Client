@@ -1,4 +1,4 @@
-package com.example.uom;
+package com.example.uom.Utils;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;

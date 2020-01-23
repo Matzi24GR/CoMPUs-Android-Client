@@ -3,15 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AnnouncementsFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_view"
-        android:dividerHeight="2dp"
-        android:visibility="gone"/>
+    tools:context=".Announcements.AnnouncementsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

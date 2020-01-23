@@ -1,4 +1,4 @@
-package com.example.uom
+package com.example.uom.Utils
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +30,6 @@ suspend fun getCookieFunc(username: String? ,password: String?): String? {
 }
 fun login (username: String? ,password: String?): String? {
     val cookie: String? = runBlocking { getCookieFunc(username, password) }
-    Log.i("Cookie",cookie!!)
+    if (cookie != null) Log.i("Cookie",cookie)
     return cookie
 }
