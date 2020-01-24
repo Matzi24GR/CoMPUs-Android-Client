@@ -1,4 +1,4 @@
-package com.example.uom.Announcements
+package com.example.uom.announcements
 
 import android.content.Context
 import android.view.LayoutInflater

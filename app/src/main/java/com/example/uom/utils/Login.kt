@@ -1,15 +1,14 @@
-package com.example.uom.Utils
+package com.example.uom.utils
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import java.io.IOException
 
-suspend fun getCookieFunc(username: String? ,password: String?): String? {
+suspend fun Login(username: String? ,password: String?): String? {
     val url = "https://compus.uom.gr/modules/auth/login.php"
     return GlobalScope.async(Dispatchers.IO) {
         var cookie: String? = null
@@ -25,11 +24,7 @@ suspend fun getCookieFunc(username: String? ,password: String?): String? {
         } catch (e: IOException) {
             e.printStackTrace()
         }
+        if (cookie != null) Log.i("Cookie",cookie) else Log.i("Cookie","Null Cookie")
         return@async cookie
     }.await()
-}
-fun login (username: String? ,password: String?): String? {
-    val cookie: String? = runBlocking { getCookieFunc(username, password) }
-    if (cookie != null) Log.i("Cookie",cookie)
-    return cookie
 }

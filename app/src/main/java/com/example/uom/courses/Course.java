@@ -1,4 +1,4 @@
-package com.example.uom.Courses;
+package com.example.uom.courses;
 
 import android.util.Log;
 

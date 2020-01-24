@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/allCoursesFragment"
-        android:name="com.example.uom.Courses.AllCoursesFragment"
+        android:name="com.example.uom.courses.AllCoursesFragment"
         android:label="fragment_all_courses"
         tools:layout="@layout/fragment_all_courses" />
     <fragment
         android:id="@+id/announcementsFragment"
-        android:name="com.example.uom.Announcements.AnnouncementsFragment"
+        android:name="com.example.uom.announcements.AnnouncementsFragment"
         android:label="fragment_announcements"
         tools:layout="@layout/fragment_announcements" />
 </navigation>

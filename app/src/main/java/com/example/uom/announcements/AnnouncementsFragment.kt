@@ -1,4 +1,4 @@
-package com.example.uom.Announcements
+package com.example.uom.announcements
 
 
 import android.content.Context
@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.uom.Courses.Course
+import com.example.uom.courses.Course
 import com.example.uom.Database.Announcement
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R

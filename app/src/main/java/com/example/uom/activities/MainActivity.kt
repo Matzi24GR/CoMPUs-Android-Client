@@ -1,4 +1,4 @@
-package com.example.uom.Activities
+package com.example.uom.activities
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.uom.R
-import com.example.uom.Utils.AllTrustingTrustManager
+import com.example.uom.utils.AllTrustingTrustManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -40,12 +40,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.getItemId()
-        if (id == R.id.action_settings) {
-            val settingsIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(settingsIntent)
-            return true
-        }
+        val id: Int = item.itemId
         return super.onOptionsItemSelected(item)
     }
 
