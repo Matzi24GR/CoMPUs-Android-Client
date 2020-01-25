@@ -14,10 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.uom.courses.Course
 import com.example.uom.Database.Announcement
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
+import com.example.uom.courses.Course
 import kotlinx.coroutines.*
 import org.jsoup.Connection
 import org.jsoup.Jsoup

@@ -75,8 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
-        app:itemIconTint="@color/colorAccent"
-        app:itemTextColor="@color/cardview_light_background"
+        app:itemIconTint="@android:color/white"
+        app:itemIconSize="28dp"
+        app:itemTextColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/botton_nav_menu" />
 

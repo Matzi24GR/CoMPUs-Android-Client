@@ -12,8 +12,7 @@ import com.example.uom.utils.Login
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class LoginActivity : AppCompatActivity() {
 
@@ -30,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
         loginButton.setOnClickListener {
-
+            progressBar.visibility = View.VISIBLE
 
             val username = usrText.editText!!.text.toString()
             val password = passwdText.editText!!.text.toString()
@@ -49,8 +48,8 @@ class LoginActivity : AppCompatActivity() {
 
             if (username != "" && password != "") {
 
-                GlobalScope.launch(Dispatchers.IO) {
-                    progressBar.visibility = View.VISIBLE
+                runBlocking(Dispatchers.IO) {
+
                     val cookie = Login(username, password)
 
                     if (cookie != null) {
@@ -59,8 +58,8 @@ class LoginActivity : AppCompatActivity() {
                         sharedPreferences.edit().putString("cookie", cookie).apply()
                         finish()
                     }
-                    progressBar.visibility = View.GONE
                 }
+                progressBar.visibility = View.GONE
             }
 
         }
