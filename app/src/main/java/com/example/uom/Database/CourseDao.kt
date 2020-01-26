@@ -7,14 +7,17 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface AnnouncementDAO {
+interface CourseDao {
 
-    @Query("Select * from announcements_table ORDER BY timestamp DESC")
-    fun getAllAnnouncements(): LiveData<List<Announcement>>
+    @Query("Select * from courses_table")
+    fun getAllCourses(): LiveData<List<Course>>
+
+    @Query("Select * from courses_table")
+    fun getAllCoursesStatic(): List<Course>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(announcement: Announcement)
+    suspend fun insert(course: Course)
 
-    @Query("DELETE FROM announcements_table")
+    @Query("DELETE FROM courses_table")
     suspend fun deleteAll()
 }

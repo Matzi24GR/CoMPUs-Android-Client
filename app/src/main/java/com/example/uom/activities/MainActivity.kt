@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
         if (sharedPreferences.getString("username",null) == null) {
             val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            this.startActivity(intent)
         }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -57,12 +57,17 @@ class MainActivity : AppCompatActivity() {
         if (id == R.id.action_log_out) {
             GlobalScope.launch(Dispatchers.IO) {
                 UomDatabase.getDatabase(this@MainActivity).AnnouncementDAO().deleteAll()
+                UomDatabase.getDatabase(this@MainActivity).CourseDao().deleteAll()
                 getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).edit().clear().apply()
                 val intent = Intent(this@MainActivity, LoginActivity::class.java)
                 startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        return
     }
 
 }

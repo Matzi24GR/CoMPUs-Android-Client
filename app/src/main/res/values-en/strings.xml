@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UoM CoMPUs</string>
+    <string name="announcements">Announcements</string>
+    <string name="login_to_compus">Login to CoMPUs</string>
+    <string name="login">Login</string>
+    <string name="courses">Courses</string>
+    <string name="password">Password</string>
+    <string name="User">User :</string>
+    <string name="username">Username</string>
+    <string name="log_out">Log Out</string>
+    <string name="refresh">Refresh</string>
+    <string name="settings">Settings</string>
+</resources>

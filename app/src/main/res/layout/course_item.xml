@@ -10,7 +10,8 @@
     android:layout_marginEnd="10dp"
     android:layout_marginStart="10dp"
     android:elevation="1dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:id="@+id/CardView">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,14 +38,6 @@
                 tools:text="Σαμαράς Νικόλαος"/>
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="INF420"
-            android:paddingTop="4dp"
-            android:id="@+id/code_text">
-        </TextView>
 
         <TextView
             android:id="@+id/semester_text"

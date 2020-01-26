@@ -14,7 +14,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.SettingsActivity">
             android:label="Settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>

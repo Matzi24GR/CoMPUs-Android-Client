@@ -15,9 +15,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uom.Database.Announcement
+import com.example.uom.Database.Course
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
-import com.example.uom.courses.Course
 import kotlinx.coroutines.*
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -25,7 +25,6 @@ import org.jsoup.nodes.Document
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class AnnouncementsFragment : Fragment() {
@@ -47,19 +46,15 @@ class AnnouncementsFragment : Fragment() {
 
 
         val announcementViewModel = ViewModelProviders.of(this)[AnnouncementViewModel::class.java]
+        announcementViewModel.allAnnouncements.observe(this, Observer { announcements -> announcements?.let { adapter.setAnnouncements(it) } })
 
-        announcementViewModel.allAnnouncements.observe(this, Observer { announcements ->
-            announcements?.let { adapter.setAnnouncements(it) }
-        })
+        val CourseDao = UomDatabase.getDatabase(this.requireContext()).CourseDao()
 
-        val dao = UomDatabase.getDatabase(this.requireContext()).AnnouncementDAO()
-        //GlobalScope.launch { dao.deleteAll() }
-
-        suspend fun getAnnouncements(cookie: String, courses: ArrayList<Course>, id: Int): Document? {
+        suspend fun getAnnouncements(cookie: String, courses: List<Course>, id: Int): Document? {
             return GlobalScope.async(Dispatchers.IO) {
                 var document: Document? = null
                 try {
-                    Jsoup.connect(courses[id].url)
+                    Jsoup.connect(courses[id].Url)
                             .cookie("PHPSESSID", cookie)
                             .method(Connection.Method.GET)
                             .execute()
@@ -76,70 +71,41 @@ class AnnouncementsFragment : Fragment() {
             }.await()
         }
 
-        suspend fun fetchHome(cookie: String?): Document? {
-            val url = "https://compus.uom.gr/index.php"
-            var document: Document? = null
-            return GlobalScope.async(Dispatchers.IO) {
-                try {
-                    val response = Jsoup.connect(url)
-                            .cookie("PHPSESSID",cookie)
-                            .method(Connection.Method.GET)
-                            .execute()
-                    document = response.parse()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                return@async document
-            }.await()
-        }
-
-        fun showHome(document: Document): ArrayList<Course> {
-            //Show User Name
-            val user = document.select("td[class=info_user]").text()
-            userText.text = user
-            //Parse Courses
-            val courses = ArrayList<Course>()
-            val coursesElements = document.select("td[class=external_table]")
-            for (i in coursesElements.indices) courses.add(Course(coursesElements[i]))
-
-            return courses
-        }
 
         loginButton.setOnClickListener {
             progressBar.isIndeterminate = true
             progressBar.visibility = View.VISIBLE
 
-            GlobalScope.launch(Dispatchers.Main) {
+            GlobalScope.launch(Dispatchers.IO) {
 
-                val document = fetchHome(cookie)
-                if (document != null) {
-                    val courses = showHome(document)
-                    progressBar.isIndeterminate = false
-                    progressBar.progress = 0
-                    progressBar.max = courses.size
+                val courses: List<Course> = CourseDao.getAllCoursesStatic()
+                progressBar.isIndeterminate = false
+                progressBar.progress = 0
+                progressBar.max = courses.size
 
-                    for (i in 0 until courses.size) {
-                        var document2 = getAnnouncements(cookie!!, courses, i) ?: continue
-                        var html = document2.html()
-                        html = html.replace("<br>", "!@#$")
-                        document2 = Jsoup.parse(html)
-                        val announcementElements = document2.select("div")
-                        for (j in announcementElements.indices) {
-                            var text: String = announcementElements[j].text().replace("!@#$", "\n").replace("\\d\\d.\\d\\d.\\d\\d\\d\\d\\n\\d\\d:\\d\\d Τελευταία Ενημέρωση:".toRegex(), "")
-                            val dateS = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
+                for (i in 0 until courses.size) {
+                    var document2 = getAnnouncements(cookie!!, courses, i) ?: continue
+                    var html = document2.html()
+                    html = html.replace("<br>", "!@#$")
+                    document2 = Jsoup.parse(html)
+                    val announcementElements = document2.select("div")
+                    for (j in announcementElements.indices) {
 
-                            text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(), "")
-                            val complete = dateS + " - " + courses[i].title + "\n\n" + text
-                            adapter.notifyDataSetChanged()
+                        var text: String = announcementElements[j].text().replace("!@#$", "\n").replace("\\d\\d.\\d\\d.\\d\\d\\d\\d\\n\\d\\d:\\d\\d Τελευταία Ενημέρωση:".toRegex(), "")
 
-                            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-                            val date = dateFormat.parse(dateS)!!
-                            announcementViewModel.insert(Announcement(complete, date.time, courses[i].title))
-                        }
-                        progressBar.incrementProgressBy(1)
+                        //announcement TIME selection
+                        val dateS = "\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d".toRegex().find(text)!!.value
+                        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+                        val date = dateFormat.parse(dateS)!!
+
+                        text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(), "")
+
+                        //Add to database
+                        announcementViewModel.insert(Announcement(text, date.time, courses[i].Title))
                     }
-                    progressBar.visibility = View.GONE
+                    progressBar.incrementProgressBy(1)
                 }
+                progressBar.visibility = View.GONE
             }
         }
 

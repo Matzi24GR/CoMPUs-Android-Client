@@ -13,7 +13,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login to\n    CoMPUs"
+        android:text="@string/login_to_compus"
         android:textColor="@android:color/white"
         android:textSize="52sp"
         android:layout_margin="24dp"
@@ -23,13 +23,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:id="@+id/username_textview"
+        android:id="@+id/username_textView"
         android:layout_margin="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="username"
+            android:hint="@string/username"
             android:inputType="textPersonName"
             android:textSize="24sp"
             android:backgroundTint="@android:color/white" />
@@ -38,13 +38,14 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:id="@+id/password_textview"
+        android:id="@+id/password_textView"
         android:layout_margin="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="password"
+            android:hint="@string/password"
+            android:imeOptions="actionGo"
             android:inputType="textPassword"
             android:textSize="24sp"
             android:backgroundTint="@android:color/white" />

@@ -10,9 +10,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Database.Course
 import com.example.uom.R
+import com.example.uom.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -32,9 +36,16 @@ class AllCoursesFragment : Fragment() {
         val userText = getActivity()!!.findViewById<TextView>(R.id.user_text)
         val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
         val progressBar = getActivity()!!.findViewById<ProgressBar>(R.id.progress_bar)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view2)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.courses_recycler_view)
 
         val cookie = activity!!.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE).getString("cookie", null)
+
+        val adapter = CourseListAdapter(this.context!!)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+
+        val courseViewModel = ViewModelProvider(this).get(CourseViewModel::class.java)
+        courseViewModel.allCourses.observe(this, Observer { courses -> courses?.let {adapter.setCourses(it)} })
 
         suspend fun fetchHome(cookie: String?): Document? {
             val url = "https://compus.uom.gr/index.php"
@@ -53,23 +64,22 @@ class AllCoursesFragment : Fragment() {
             }.await()
         }
 
-        fun showHome(document: Document): ArrayList<Course> {
+        fun showHome(document: Document) {
             //Show User Name
             val user = document.select("td[class=info_user]").text()
             userText.text = user
 
             //Parse Courses
-            val courses = ArrayList<Course>()
             val coursesElements = document.select("td[class=external_table]")
-            for (i in coursesElements.indices) courses.add(Course(coursesElements[i]))
-
-            //Display Courses
-            val adapter = CourseAdapter(context, R.layout.course_item, courses)
-            val linearLayoutManager = LinearLayoutManager(context)
-            recyclerView.layoutManager = linearLayoutManager
-            recyclerView.adapter = adapter
-
-            return courses
+            for (i in coursesElements.indices)
+                courseViewModel.insert(
+                    Course(
+                            getTitle(coursesElements[i]),
+                            getProfs(coursesElements[i]),
+                            getUrl(coursesElements[i]),
+                            getSemester(coursesElements[i]),
+                            getActive(coursesElements[i]),
+                            getCode(coursesElements[i])))
         }
 
         loginButton.setOnClickListener {
@@ -80,17 +90,12 @@ class AllCoursesFragment : Fragment() {
 
                 val document = fetchHome(cookie)
                 if (document != null) {
-                    val courses = showHome(document)
+                    showHome(document)
                 }
                 progressBar.visibility = View.GONE
             }
 
         }
-
-
-
-
-
         // Inflate the layout for this fragment
         return view
     }

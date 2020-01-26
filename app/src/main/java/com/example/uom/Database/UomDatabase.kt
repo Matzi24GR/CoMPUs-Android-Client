@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
-@Database(entities = arrayOf(Announcement::class), version = 4, exportSchema = false)
-public abstract class UomDatabase : RoomDatabase() {
+@Database(entities = arrayOf(Announcement::class,Course::class), version = 5, exportSchema = false)
+abstract class UomDatabase : RoomDatabase() {
 
     abstract fun AnnouncementDAO(): AnnouncementDAO
+    abstract fun CourseDao(): CourseDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

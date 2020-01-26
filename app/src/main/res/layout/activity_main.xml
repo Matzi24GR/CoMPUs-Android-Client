@@ -29,14 +29,14 @@
                     android:layout_gravity="center_vertical"
                     android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:text="Χρήστης :" />
+                    android:text="@string/User" />
 
                 <Button
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:text="Είσοδος" />
+                    android:text="@string/login" />
 
             </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -79,6 +79,6 @@
         app:itemIconSize="28dp"
         app:itemTextColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/botton_nav_menu" />
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

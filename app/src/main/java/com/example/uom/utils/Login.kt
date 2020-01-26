@@ -20,7 +20,13 @@ suspend fun Login(username: String? ,password: String?): String? {
                     .method(Connection.Method.POST)
                     .execute()
 
-            cookie = if (response.body().contains("Τα Μαθήματά Μου")) response.cookie("PHPSESSID") else null
+            with(response.body()) {
+                cookie = when {
+                    contains("Τα Μαθήματά Μου") -> response.cookie("PHPSESSID")
+                    contains("Η Είσοδος Απέτυχε") -> "Wrong_Username/Password"
+                    else -> null
+                }
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
