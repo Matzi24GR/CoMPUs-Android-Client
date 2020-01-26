@@ -2,6 +2,8 @@
   <dictionary name="matzi24">
     <words>
       <w>compus</w>
+      <w>coroutines</w>
+      <w>jsoup</w>
       <w>passwd</w>
       <w>phpsessid</w>
       <w>uname</w>

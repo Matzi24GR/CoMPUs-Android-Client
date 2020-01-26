@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -68,25 +67,13 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         loginButton.setOnClickListener {
-            usrText.visibility = View.GONE
-            passwdText.visibility = View.GONE
-            progressBar.visibility = View.VISIBLE
             loginFunc()
-            usrText.visibility = View.VISIBLE
-            passwdText.visibility = View.VISIBLE
-            progressBar.visibility = View.GONE
             }
 
         passwdText.editText!!.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_GO){
                 Log.i("LoginEnterKey","PRESSED!")
-                usrText.visibility = View.GONE
-                passwdText.visibility = View.GONE
-                progressBar.visibility = View.VISIBLE
                 loginFunc()
-                usrText.visibility = View.VISIBLE
-                passwdText.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
                 true
             } else {
                 false

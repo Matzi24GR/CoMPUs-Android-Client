@@ -76,7 +76,7 @@ class AnnouncementsFragment : Fragment() {
             progressBar.isIndeterminate = true
             progressBar.visibility = View.VISIBLE
 
-            GlobalScope.launch(Dispatchers.IO) {
+            val job = GlobalScope.launch(Dispatchers.IO) {
 
                 val courses: List<Course> = CourseDao.getAllCoursesStatic()
                 progressBar.isIndeterminate = false
@@ -105,8 +105,8 @@ class AnnouncementsFragment : Fragment() {
                     }
                     progressBar.incrementProgressBy(1)
                 }
-                progressBar.visibility = View.GONE
             }
+            job.invokeOnCompletion {GlobalScope.launch(Dispatchers.Main) { progressBar.visibility = View.GONE }}
         }
 
 
