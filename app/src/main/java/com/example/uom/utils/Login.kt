@@ -13,16 +13,25 @@ suspend fun Login(username: String? ,password: String?): String? {
     return GlobalScope.async(Dispatchers.IO) {
         var cookie: String? = null
         try {
+
+            val initial = Jsoup.connect(url)
+                    .method(Connection.Method.GET)
+                    .execute()
+
+            cookie = initial.cookie("PHPSESSID")
             val response = Jsoup.connect(url)
                     .data("uname", username)
                     .data("pass", password)
-                    .data("login", "submit")
+                    .data("login", "") //can be anything
+                    .referrer(url)
+                    .cookies(initial.cookies())
                     .method(Connection.Method.POST)
                     .execute()
 
+
             with(response.body()) {
                 cookie = when {
-                    contains("Τα Μαθήματά Μου") -> response.cookie("PHPSESSID")
+                    contains("Τα Μαθήματά Μου") -> initial.cookie("PHPSESSID")
                     contains("Η Είσοδος Απέτυχε") -> "Wrong_Username/Password"
                     else -> null
                 }
@@ -30,7 +39,7 @@ suspend fun Login(username: String? ,password: String?): String? {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (cookie != null) Log.i("Cookie",cookie) else Log.i("Cookie","Null Cookie")
+        if (cookie != null) Log.i("Cookie",cookie!!) else Log.i("Cookie","Null Cookie")
         return@async cookie
     }.await()
 }
