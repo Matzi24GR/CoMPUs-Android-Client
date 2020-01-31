@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -25,9 +26,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
-        if (sharedPreferences.getString("username",null) == null) {
+        if (sharedPreferences.getString("status",null) != "success") {
             val intent = Intent(this, LoginActivity::class.java)
             this.startActivity(intent)
+        }
+        val fullName = sharedPreferences.getString("name",null)
+        if (fullName != null) {
+            findViewById<TextView>(id.user_text).text = fullName
         }
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)

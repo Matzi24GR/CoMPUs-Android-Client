@@ -5,15 +5,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uom.R
-import com.example.uom.utils.Login
+import com.example.uom.utils.login
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class LoginActivity : AppCompatActivity() {
@@ -48,29 +51,38 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/AG8VFyW61e0")))
 
             if (username != "" && password != "") {
-                val cookie = runBlocking { Login(username, password)}
 
-                var errorReturned = true
-                when (cookie) {
-                    "Wrong_Username/Password" -> Toast.makeText(this@LoginActivity,"Wrong Username/Password",Toast.LENGTH_SHORT).show()
-                    null -> Toast.makeText(this@LoginActivity,"Check your internet connection",Toast.LENGTH_SHORT).show()
-                    else -> errorReturned = false
+                sharedPreferences.edit().putString("username", username).apply()
+                sharedPreferences.edit().putString("password", password).apply()
+
+                val loginJob = GlobalScope.launch (Dispatchers.IO) { login(this@LoginActivity)}
+
+                loginJob.invokeOnCompletion {
+
+                    when (sharedPreferences.getString("status",null)) {
+
+                        "wrong" -> Toast.makeText(this@LoginActivity,"Wrong Username/Password",Toast.LENGTH_SHORT).show()
+
+                        "error" -> Toast.makeText(this@LoginActivity,"Check your internet connection",Toast.LENGTH_SHORT).show()
+
+                        "success" -> {
+                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            startActivity(intent)
+                        }
+
+                        else -> Toast.makeText(this@LoginActivity,"This shouldn't ever happen",Toast.LENGTH_SHORT).show()
+
+                    }
                 }
 
-                if (!errorReturned) {
-                    sharedPreferences.edit().putString("username", username).apply()
-                    sharedPreferences.edit().putString("password", password).apply()
-                    sharedPreferences.edit().putString("cookie", cookie).apply()
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                }
+
             }
         }
         loginButton.setOnClickListener {
             loginFunc()
             }
 
-        passwdText.editText!!.setOnEditorActionListener { v, actionId, event ->
+        passwdText.editText!!.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_GO){
                 Log.i("LoginEnterKey","PRESSED!")
                 loginFunc()

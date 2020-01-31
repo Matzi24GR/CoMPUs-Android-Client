@@ -19,12 +19,8 @@ import com.example.uom.R
 import com.example.uom.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import org.jsoup.Connection
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import java.io.IOException
 
 class AllCoursesFragment : Fragment() {
 
@@ -33,9 +29,9 @@ class AllCoursesFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_all_courses, container, false)
 
-        val userText = getActivity()!!.findViewById<TextView>(R.id.user_text)
-        val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
-        val progressBar = getActivity()!!.findViewById<ProgressBar>(R.id.progress_bar)
+        val userText = activity!!.findViewById<TextView>(R.id.user_text)
+        val loginButton = activity!!.findViewById<Button>(R.id.login_button)
+        val progressBar = activity!!.findViewById<ProgressBar>(R.id.progress_bar)
         val recyclerView = view.findViewById<RecyclerView>(R.id.courses_recycler_view)
 
         val cookie = activity!!.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE).getString("cookie", null)
@@ -47,26 +43,10 @@ class AllCoursesFragment : Fragment() {
         val courseViewModel = ViewModelProvider(this).get(CourseViewModel::class.java)
         courseViewModel.allCourses.observe(this, Observer { courses -> courses?.let {adapter.setCourses(it)} })
 
-        suspend fun fetchHome(cookie: String?): Document? {
-            val url = "https://compus.uom.gr/index.php"
-            var document: Document? = null
-            return GlobalScope.async(Dispatchers.IO) {
-                try {
-                    val response = Jsoup.connect(url)
-                            .cookie("PHPSESSID",cookie)
-                            .method(Connection.Method.GET)
-                            .execute()
-                    document = response.parse()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                return@async document
-            }.await()
-        }
-
         fun showHome(document: Document) {
             //Show User Name
             val user = document.select("td[class=info_user]").text()
+            context!!.getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).edit().putString("name",user).apply()
             userText.text = user
 
             //Parse Courses
@@ -88,7 +68,7 @@ class AllCoursesFragment : Fragment() {
                 progressBar.isIndeterminate = true
                 progressBar.visibility = View.VISIBLE
 
-                val document = fetchHome(cookie)
+                val document = fetchSite(context!!,"https://compus.uom.gr/index.php")
                 if (document != null) {
                     showHome(document)
                 }

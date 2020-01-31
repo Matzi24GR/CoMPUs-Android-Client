@@ -11,7 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uom.Database.Announcement
@@ -33,8 +33,8 @@ class AnnouncementsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_announcements, container, false)
 
-        val userText = getActivity()!!.findViewById<TextView>(R.id.user_text)
-        val loginButton = getActivity()!!.findViewById<Button>(R.id.login_button)
+        val userText = activity!!.findViewById<TextView>(R.id.user_text)
+        val loginButton = activity!!.findViewById<Button>(R.id.login_button)
         val progressBar = activity!!.findViewById<ProgressBar>(R.id.progress_bar)
         val recyclerView = view.findViewById<RecyclerView>(R.id.announcementsRecyclerView)
 
@@ -45,7 +45,7 @@ class AnnouncementsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(this.context)
 
 
-        val announcementViewModel = ViewModelProviders.of(this)[AnnouncementViewModel::class.java]
+        val announcementViewModel = ViewModelProvider(this).get(AnnouncementViewModel::class.java)
         announcementViewModel.allAnnouncements.observe(this, Observer { announcements -> announcements?.let { adapter.setAnnouncements(it) } })
 
         val CourseDao = UomDatabase.getDatabase(this.requireContext()).CourseDao()
@@ -58,7 +58,7 @@ class AnnouncementsFragment : Fragment() {
                             .cookie("PHPSESSID", cookie)
                             .method(Connection.Method.GET)
                             .execute()
-                    delay(100)
+                    delay((100..300).random().toLong())
                     val response = Jsoup.connect("http://compus.uom.gr/modules/anns/anns.php")
                             .cookie("PHPSESSID", cookie)
                             .method(Connection.Method.GET)
