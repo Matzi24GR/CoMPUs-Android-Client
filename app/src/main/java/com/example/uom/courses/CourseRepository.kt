@@ -22,7 +22,7 @@ class CourseRepository(private val context: Context) {
 
     suspend fun refreshCourses() {
             val document = fetchSite(context,"https://compus.uom.gr/index.php")
-            if (document != null) {
+            if (document != null && document.html().contains("Τα Μαθήματά Μου")) {
                 //Show User Name
                 val user = document.select("td[class=info_user]").text()
                 context.getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).edit().putString("name",user).apply()
@@ -43,7 +43,9 @@ class CourseRepository(private val context: Context) {
                     arrayList.add(getTitle(coursesElements[i]))
                 }
                 deleteNotInList(arrayList)
+            } else {
+                val isRefreshed = refreshCookie(context,3)
+                if (isRefreshed) refreshCourses()
             }
-
     }
 }

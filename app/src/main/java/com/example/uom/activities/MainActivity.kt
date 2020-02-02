@@ -28,8 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-
         AllTrustingTrustManager()
 
         // Finding the Navigation Controller
@@ -64,11 +62,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id: Int = item.itemId
-        if (id == R.id.action_settings) {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-            return true
-        }
         if (id == R.id.action_log_out) {
             GlobalScope.launch(Dispatchers.IO) {
                 UomDatabase.getDatabase(this@MainActivity).AnnouncementDAO().deleteAll()
@@ -76,6 +69,11 @@ class MainActivity : AppCompatActivity() {
                 getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).edit().clear().apply()
                 val intent = Intent(this@MainActivity, LoginActivity::class.java)
                 startActivity(intent)
+            }
+        } else if (id == R.id.action_refresh) {
+            GlobalScope.launch(Dispatchers.IO) {
+                CourseRepository(this@MainActivity).refreshCourses()
+                AnnouncementRepository(this@MainActivity).refreshAnnouncements()
             }
         }
         return super.onOptionsItemSelected(item)

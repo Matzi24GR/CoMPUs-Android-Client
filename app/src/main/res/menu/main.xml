@@ -5,12 +5,9 @@
         android:title="@string/refresh"
         android:icon="@drawable/ic_refresh_24px"
         android:orderInCategory="1" />
-    <item
-    android:id="@+id/action_settings"
-    android:title="@string/settings"
-    android:orderInCategory="2" />
+
     <item
         android:id="@+id/action_log_out"
         android:title="@string/log_out"
-        android:orderInCategory="3"/>
+        android:orderInCategory="2"/>
 </menu>

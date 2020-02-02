@@ -20,7 +20,7 @@ import java.util.*
 class AnnouncementRepository(val context: Context) {
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
-    val announcementDAO = UomDatabase.getDatabase(context).AnnouncementDAO()
+    private val announcementDAO = UomDatabase.getDatabase(context).AnnouncementDAO()
     val allAnnouncements: LiveData<List<Announcement>> = announcementDAO.getAllAnnouncements()
     suspend fun insertAnnouncement(announcement: Announcement) {
         announcementDAO.insert(announcement)
@@ -31,7 +31,7 @@ class AnnouncementRepository(val context: Context) {
 
         val cookie = context.getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).getString("cookie",null)
 
-        for (i in 0 until courses.size) {
+        for (i in courses.indices) {
             var document2 = getAnnouncements(cookie!!, courses, i) ?: continue
             var html = document2.html()
             html = html.replace("<br>", "!@#$")
@@ -58,11 +58,12 @@ class AnnouncementRepository(val context: Context) {
         return GlobalScope.async(Dispatchers.IO) {
             var document: Document? = null
             try {
+                delay((100..200).random().toLong())
                 Jsoup.connect(courses[id].Url)
                         .cookie("PHPSESSID", cookie)
                         .method(Connection.Method.GET)
                         .execute()
-                delay((100..300).random().toLong())
+                delay((50..150).random().toLong())
                 val response = Jsoup.connect("http://compus.uom.gr/modules/anns/anns.php")
                         .cookie("PHPSESSID", cookie)
                         .method(Connection.Method.GET)
