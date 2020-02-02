@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -57,24 +58,25 @@ class LoginActivity : AppCompatActivity() {
 
                 val loginJob = GlobalScope.launch (Dispatchers.IO) { login(this@LoginActivity)}
 
+                var toastMessage: String? = null
                 loginJob.invokeOnCompletion {
-
+                    if (Looper.myLooper() == null) Looper.prepare()
                     when (sharedPreferences.getString("status",null)) {
 
-                        "wrong" -> Toast.makeText(this@LoginActivity,"Wrong Username/Password",Toast.LENGTH_SHORT).show()
+                        "wrong" -> toastMessage = "Wrong Username/Password"
 
-                        "error" -> Toast.makeText(this@LoginActivity,"Check your internet connection",Toast.LENGTH_SHORT).show()
+                        "error" -> toastMessage = "Check your internet connection"
 
                         "success" -> {
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                            val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                         }
 
-                        else -> Toast.makeText(this@LoginActivity,"This shouldn't ever happen",Toast.LENGTH_SHORT).show()
-
+                        else -> toastMessage = "This shouldn't ever happen"
                     }
+                    this@LoginActivity.runOnUiThread{ if (toastMessage != null) Toast.makeText(this@LoginActivity,toastMessage,Toast.LENGTH_SHORT).show() }
+                    if (toastMessage != null) Toast.makeText(this,toastMessage,Toast.LENGTH_SHORT).show()
                 }
-
 
             }
         }

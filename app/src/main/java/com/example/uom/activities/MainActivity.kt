@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -13,6 +14,8 @@ import androidx.preference.PreferenceManager
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
 import com.example.uom.R.id
+import com.example.uom.announcements.AnnouncementRepository
+import com.example.uom.courses.CourseRepository
 import com.example.uom.utils.AllTrustingTrustManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
@@ -25,26 +28,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
-        if (sharedPreferences.getString("status",null) != "success") {
-            val intent = Intent(this, LoginActivity::class.java)
-            this.startActivity(intent)
-        }
-        val fullName = sharedPreferences.getString("name",null)
-        if (fullName != null) {
-            findViewById<TextView>(id.user_text).text = fullName
-        }
-
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-
-        val bottomNavView = findViewById<BottomNavigationView>(id.bottom_navigation)
 
         AllTrustingTrustManager()
 
         // Finding the Navigation Controller
         val navController = findNavController(id.fragNavHost)
         // Setting Navigation Controller with the BottomNavigationView
+        val bottomNavView = findViewById<BottomNavigationView>(id.bottom_navigation)
         bottomNavView.setupWithNavController(navController)
+
+
+        val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
+
+        if (sharedPreferences.getString("status",null) != "success") {
+
+            val intent = Intent(this, LoginActivity::class.java)
+            this.startActivity(intent)
+
+        } else {
+
+            val fullName = sharedPreferences.getString("name",null)
+            GlobalScope.launch(Dispatchers.IO) {
+                CourseRepository(this@MainActivity).refreshCourses()
+                AnnouncementRepository(this@MainActivity).refreshAnnouncements()
+            }
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

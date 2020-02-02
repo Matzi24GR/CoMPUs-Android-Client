@@ -17,10 +17,8 @@ class AnnouncementViewModel(application: Application) : AndroidViewModel(applica
     val allAnnouncements: LiveData<List<Announcement>>
 
     init {
-        // Gets reference to AnnouncementsDAO from UomDatabase to construct
-        // the correct DataRepository.
-        val announcementDAO = UomDatabase.getDatabase(application).AnnouncementDAO()
-        repository = AnnouncementRepository(announcementDAO)
+
+        repository = AnnouncementRepository(this.getApplication())
         allAnnouncements = repository.allAnnouncements
     }
 

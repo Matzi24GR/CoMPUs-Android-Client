@@ -19,8 +19,7 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
     init {
         // Gets reference to AnnouncementsDAO from UomDatabase to construct
         // the correct DataRepository.
-        val courseDAO = UomDatabase.getDatabase(application).CourseDao()
-        repository = CourseRepository(courseDAO)
+        repository = CourseRepository(this.getApplication())
         allCourses = repository.allCourses
     }
 
