@@ -11,4 +11,5 @@ data class Announcement(val announcement: String, val time: Long, val courseStri
     var text = announcement
     var timestamp = time
     var course = courseString
+    var isRead = false
 }

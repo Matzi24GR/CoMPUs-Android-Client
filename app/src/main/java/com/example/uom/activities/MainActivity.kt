@@ -5,18 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
-import androidx.annotation.RestrictTo
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
-import com.example.uom.R.id
 import com.example.uom.announcements.AnnouncementRepository
 import com.example.uom.courses.CourseRepository
 import com.example.uom.utils.AllTrustingTrustManager
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,10 +31,18 @@ class MainActivity : AppCompatActivity() {
         AllTrustingTrustManager()
 
         // Finding the Navigation Controller
-        val navController = findNavController(id.fragNavHost)
+        val navController = findNavController(R.id.fragNavHost)
         // Setting Navigation Controller with the BottomNavigationView
-        val bottomNavView = findViewById<BottomNavigationView>(id.bottom_navigation)
+        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavView.setupWithNavController(navController)
+        val menuItemId: Int = bottomNavView.getMenu().getItem(1).getItemId()
+        val badge: BadgeDrawable = bottomNavView.getOrCreateBadge(menuItemId)
+        val unreadCount = AnnouncementRepository(this).unreadCount
+        unreadCount.observe(this, Observer {
+            val countval = unreadCount.value!!
+            badge.isVisible = countval != 0
+            badge.number = countval}
+        )
 
 
         val sharedPreferences = getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)

@@ -32,7 +32,8 @@ class AnnouncementsListAdapter internal constructor(val context: Context): Recyc
         holder.announcementTextView.text = current.text
         holder.announcementCourseView.text = current.course
         holder.announcementTimeView.text = SimpleDateFormat("d MMM, yyyy \nhh:mm a").format(current.time)
-
+        current.isRead = true
+        AnnouncementRepository(context).setRead(current,true)
         Linkify.addLinks(holder.announcementTextView,Linkify.WEB_URLS)
     }
 

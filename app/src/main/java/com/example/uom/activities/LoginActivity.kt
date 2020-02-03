@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
                         else -> toastMessage = "This shouldn't ever happen"
                     }
                     this@LoginActivity.runOnUiThread{ if (toastMessage != null) Toast.makeText(this@LoginActivity,toastMessage,Toast.LENGTH_SHORT).show() }
-                    if (toastMessage != null) Toast.makeText(this,toastMessage,Toast.LENGTH_SHORT).show()
+                    if (toastMessage != null) Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show()
                 }
 
             }

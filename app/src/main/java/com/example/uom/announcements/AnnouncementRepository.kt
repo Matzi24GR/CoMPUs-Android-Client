@@ -6,10 +6,7 @@ import com.example.uom.Database.Announcement
 import com.example.uom.Database.AnnouncementDAO
 import com.example.uom.Database.Course
 import com.example.uom.Database.UomDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -22,6 +19,7 @@ class AnnouncementRepository(val context: Context) {
     // Observed LiveData will notify the observer when the data has changed.
     private val announcementDAO = UomDatabase.getDatabase(context).AnnouncementDAO()
     val allAnnouncements: LiveData<List<Announcement>> = announcementDAO.getAllAnnouncements()
+    val unreadCount: LiveData<Int> = announcementDAO.getUnreadCount()
     suspend fun insertAnnouncement(announcement: Announcement) {
         announcementDAO.insert(announcement)
     }
@@ -52,6 +50,11 @@ class AnnouncementRepository(val context: Context) {
                 insertAnnouncement(Announcement(text, date.time, courses[i].Title))
             }
         }
+    }
+
+    fun setRead(announcement: Announcement, boolean: Boolean) {
+        announcement.isRead = boolean
+        GlobalScope.launch(Dispatchers.IO) {announcementDAO.updateAnnouncement(announcement)}
     }
 
     private suspend fun getAnnouncements(cookie: String, courses: List<Course>, id: Int): Document? {
