@@ -2,6 +2,7 @@ package com.example.uom.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.PeriodicSync
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.uom.AnnouncementWorker
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
 import com.example.uom.announcements.AnnouncementRepository
@@ -21,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -61,6 +68,14 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        //Work Manager Sync for announcements
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val announcementRefreshWork = PeriodicWorkRequestBuilder<AnnouncementWorker>(
+                30,TimeUnit.MINUTES,
+                15,TimeUnit.MINUTES
+        ).setConstraints(constraints).build()
+        WorkManager.getInstance(this).enqueue(announcementRefreshWork)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
