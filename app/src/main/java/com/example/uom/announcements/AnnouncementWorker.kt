@@ -1,4 +1,4 @@
-package com.example.uom
+package com.example.uom.announcements
 
 import android.content.Context
 import androidx.work.Worker

@@ -11,4 +11,5 @@
     <string name="log_out">Αποσύνδεση</string>
     <string name="refresh">Ανανέωση</string>
     <string name="settings">Ρυθμίσεις</string>
+    <string name="newAnnouncementTag">Νέο</string>
 </resources>

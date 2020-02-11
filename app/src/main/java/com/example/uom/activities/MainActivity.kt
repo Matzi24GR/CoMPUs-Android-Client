@@ -2,30 +2,28 @@ package com.example.uom.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.PeriodicSync
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.uom.AnnouncementWorker
 import com.example.uom.Database.UomDatabase
 import com.example.uom.R
 import com.example.uom.announcements.AnnouncementRepository
+import com.example.uom.announcements.AnnouncementWorker
 import com.example.uom.courses.CourseRepository
 import com.example.uom.utils.AllTrustingTrustManager
+import com.example.uom.utils.refreshSecondaryCookie
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -62,12 +60,15 @@ class MainActivity : AppCompatActivity() {
         } else {
 
             val fullName = sharedPreferences.getString("name",null)
-            GlobalScope.launch(Dispatchers.IO) {
-                CourseRepository(this@MainActivity).refreshCourses()
-                AnnouncementRepository(this@MainActivity).refreshAnnouncements()
-            }
+            val CourseJob = GlobalScope.async(Dispatchers.IO) {
+                CourseRepository(this@MainActivity).refreshCourses() }
+            CourseJob.invokeOnCompletion {
+                GlobalScope.launch(Dispatchers.IO) {
+                    AnnouncementRepository(this@MainActivity).refreshAnnouncements() }}
 
         }
+
+        GlobalScope.launch { refreshSecondaryCookie(this@MainActivity,3) }
 
         //Work Manager Sync for announcements
         val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 30,TimeUnit.MINUTES,
                 15,TimeUnit.MINUTES
         ).setConstraints(constraints).build()
-        WorkManager.getInstance(this).enqueue(announcementRefreshWork)
+        //WorkManager.getInstance(this).enqueue(announcementRefreshWork)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -100,10 +101,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        return
     }
 
 }

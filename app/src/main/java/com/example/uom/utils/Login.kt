@@ -87,3 +87,27 @@ suspend fun refreshCookie(context: Context, retries: Int): Boolean {
         return false
     }
 }
+
+suspend fun refreshSecondaryCookie(context: Context, retries: Int): Boolean {
+    val sharedPreferences = context.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE)
+
+    if (retries != 0) {
+        val cookie: String? = getCookie(
+                sharedPreferences.getString("username", null),
+                sharedPreferences.getString("password", null)
+        )
+        when (cookie) {
+            null -> {
+                Log.i("refreshCookie2", "Couldn't refresh cookie2")
+                return refreshCookie(context, retries - 1)
+            }
+            else -> {
+                Log.i("refreshCookie2", "Refreshed Cookie2 Successfully")
+                sharedPreferences.edit().putString("cookie2", cookie).apply()
+                return true
+            }
+        }
+    } else {
+        return false
+    }
+}

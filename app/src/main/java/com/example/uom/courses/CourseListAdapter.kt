@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uom.Database.Course
 import com.example.uom.R
@@ -33,6 +35,11 @@ class CourseListAdapter internal constructor(val context: Context): RecyclerView
 
         holder.CardView.setOnClickListener{
             //Toast.makeText(context, current.Title, Toast.LENGTH_SHORT).show()
+            val bundle = bundleOf(
+                    "parent" to current.Url,
+                    "URL" to current.Url
+            )
+            it.findNavController().navigate(R.id.action_toDirectoryFragment,bundle)
         }
     }
 

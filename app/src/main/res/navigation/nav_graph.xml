@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav_graph"
+    app:startDestination="@id/allCoursesFragment">
+
+    <fragment
+        android:id="@+id/allCoursesFragment"
+        android:name="com.example.uom.courses.AllCoursesFragment"
+        android:label="fragment_all_courses"
+        tools:layout="@layout/fragment_all_courses" >
+        <action
+            android:id="@+id/action_toDirectoryFragment"
+            app:destination="@id/directoryFragment"
+            app:enterAnim="@anim/fragment_fade_enter" />
+    </fragment>
+    <fragment
+        android:id="@+id/announcementsFragment"
+        android:name="com.example.uom.announcements.AnnouncementsFragment"
+        android:label="fragment_announcements"
+        tools:layout="@layout/fragment_announcements" />
+    <fragment
+        android:id="@+id/directoryFragment"
+        android:name="com.example.uom.directories.DirectoryFragment"
+        android:label="fragment_directory"
+        tools:layout="@layout/fragment_directory" >
+        <action
+            android:id="@+id/action_directoryFragment_self"
+            app:destination="@id/directoryFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"
+            app:launchSingleTop="true" />
+        <argument android:name="parent"
+            app:argType="string" />
+        <argument
+            android:name="URL"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_open_pdf"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.uom.utils.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+</navigation>

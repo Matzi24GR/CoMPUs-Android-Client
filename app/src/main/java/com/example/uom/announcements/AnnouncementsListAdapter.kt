@@ -20,7 +20,7 @@ class AnnouncementsListAdapter internal constructor(val context: Context): Recyc
         var announcementTextView: TextView = itemView.findViewById(R.id.text)
         var announcementCourseView: TextView = itemView.findViewById(R.id.course_text)
         var announcementTimeView: TextView = itemView.findViewById(R.id.time_text)
-        var CardView: CardView = itemView.findViewById(R.id.CardView)
+        var announcementNewTag: CardView = itemView.findViewById(R.id.new_tag)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnnouncementViewHolder {
         val itemView = inflater.inflate(R.layout.announcement_item, parent, false)
@@ -32,6 +32,7 @@ class AnnouncementsListAdapter internal constructor(val context: Context): Recyc
         holder.announcementTextView.text = current.text
         holder.announcementCourseView.text = current.course
         holder.announcementTimeView.text = SimpleDateFormat("d MMM, yyyy \nhh:mm a").format(current.time)
+        if ( ! current.isRead) holder.announcementNewTag.visibility = View.VISIBLE
         current.isRead = true
         AnnouncementRepository(context).setRead(current,true)
         Linkify.addLinks(holder.announcementTextView,Linkify.WEB_URLS)
