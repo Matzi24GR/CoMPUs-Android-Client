@@ -13,7 +13,10 @@
         <action
             android:id="@+id/action_toDirectoryFragment"
             app:destination="@id/directoryFragment"
-            app:enterAnim="@anim/fragment_fade_enter" />
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
     </fragment>
     <fragment
         android:id="@+id/announcementsFragment"
@@ -31,15 +34,14 @@
             app:enterAnim="@anim/fragment_fade_enter"
             app:exitAnim="@anim/fragment_fade_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit"
-            app:launchSingleTop="true" />
+            app:popExitAnim="@anim/fragment_close_exit" />
         <argument android:name="parent"
             app:argType="string" />
         <argument
             android:name="URL"
             app:argType="string" />
         <action
-            android:id="@+id/action_open_pdf"
+            android:id="@+id/action_open_web"
             app:destination="@id/webViewFragment" />
     </fragment>
     <fragment

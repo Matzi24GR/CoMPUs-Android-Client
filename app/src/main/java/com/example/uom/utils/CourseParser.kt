@@ -13,6 +13,7 @@ fun getUrl(element: Element): String{
     return "http://compus.uom.gr/" + element.select("a").attr("href")
 }
 fun getSemester(element: Element): Int{
+    //TODO fix semester parsing so it can parse multiple semesters (ex.semester 1 and 2 NOT 12)
     return element.select("i").text().replace("\\D+".toRegex(), "").toInt()
 }
 fun getActive(element: Element): Boolean{

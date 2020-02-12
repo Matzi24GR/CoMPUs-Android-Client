@@ -22,7 +22,7 @@ class WebViewFragment : Fragment() {
         val webView = view.findViewById<WebView>(R.id.web_view)
         val url = arguments?.getString("url")
 
-        webView.loadUrl("https://docs.google.com/gview?embedded=true&url=$url")
+        webView.loadUrl(url)
 
         return view
     }

@@ -7,20 +7,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ProgressBar
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.uom.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.jsoup.Connection
 import org.jsoup.Jsoup
+
 
 /**
  * A simple [Fragment] subclass.
@@ -35,18 +36,20 @@ class DirectoryFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.directoryRecyclerView)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-        val backButton = view.findViewById<Button>(R.id.back_button)
+        val backButton = view.findViewById<FloatingActionButton>(R.id.fab)
 
         val cookie = context!!.getSharedPreferences("CREDENTIALS", Context.MODE_PRIVATE).getString("cookie2", null)
         val parent = arguments!!.getString("parent")
         val url = arguments!!.getString("URL")
 
         val array: ArrayList<ItemClass> = arrayListOf()
-        val adapter = DirectoryListAdapter(this@DirectoryFragment.context!!, array,url!!)
+        val adapter = DirectoryListAdapter(this@DirectoryFragment.context!!, array)
+        recyclerView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this@DirectoryFragment.context)
 
 
+        //TODO refactor this code so it doesn't have repetitions
 
         Log.i("Directory","Entered Fragment")
         progressBar.visibility = View.VISIBLE
@@ -92,13 +95,8 @@ class DirectoryFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }
-
         backButton.setOnClickListener{
-            val bundle = bundleOf(
-                    "parent" to parent,
-                    "URL" to parent
-            )
-            it.findNavController().navigate(R.id.action_directoryFragment_self,bundle)
+            it.findNavController().popBackStack()
         }
 
         return view
