@@ -1,12 +1,10 @@
-package com.example.uom.courses
+package com.example.uom.Repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.uom.Database.Course
-import com.example.uom.Database.CourseDao
 import com.example.uom.Database.UomDatabase
 import com.example.uom.utils.*
-import kotlinx.coroutines.*
 
 class CourseRepository(private val context: Context) {
     // Room executes all queries on a separate thread.

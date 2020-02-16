@@ -1,4 +1,4 @@
-package com.example.uom.courses
+package com.example.uom.Fragment
 
 
 
@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Adapter.CourseListAdapter
+import com.example.uom.ViewModel.CourseViewModel
 import com.example.uom.R
 
 class AllCoursesFragment : Fragment() {

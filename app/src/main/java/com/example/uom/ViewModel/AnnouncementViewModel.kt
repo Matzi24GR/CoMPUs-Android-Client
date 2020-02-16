@@ -1,26 +1,25 @@
-package com.example.uom.courses
+package com.example.uom.ViewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.uom.Database.Course
-import com.example.uom.Database.UomDatabase
+import com.example.uom.Repository.AnnouncementRepository
+import com.example.uom.Database.Announcement
 import kotlinx.coroutines.launch
 
 // Class extends AndroidViewModel and requires application as a parameter.
-class CourseViewModel(application: Application) : AndroidViewModel(application) {
+class AnnouncementViewModel(application: Application) : AndroidViewModel(application) {
 
     // The ViewModel maintains a reference to the repository to get data.
-    private val repository: CourseRepository
+    private val repository: AnnouncementRepository
     // LiveData gives us updated announcements when they change.
-    val allCourses: LiveData<List<Course>>
+    val allAnnouncements: LiveData<List<Announcement>>
 
     init {
-        // Gets reference to AnnouncementsDAO from UomDatabase to construct
-        // the correct DataRepository.
-        repository = CourseRepository(this.getApplication())
-        allCourses = repository.allCourses
+
+        repository = AnnouncementRepository(this.getApplication())
+        allAnnouncements = repository.allAnnouncements
     }
 
     /**
@@ -30,7 +29,7 @@ class CourseViewModel(application: Application) : AndroidViewModel(application) 
      * ViewModels have a coroutine scope based on their lifecycle called
      * viewModelScope which we can use here.
      */
-    fun insert(course: Course) = viewModelScope.launch {
-        repository.insertCourse(course)
+    fun insert(announcement: Announcement) = viewModelScope.launch {
+        repository.insertAnnouncement(announcement)
     }
 }

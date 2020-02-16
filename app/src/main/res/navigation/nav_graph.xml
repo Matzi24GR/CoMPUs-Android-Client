@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bottom_nav_graph"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/allCoursesFragment">
 
     <fragment
         android:id="@+id/allCoursesFragment"
-        android:name="com.example.uom.courses.AllCoursesFragment"
+        android:name="com.example.uom.Fragment.AllCoursesFragment"
         android:label="fragment_all_courses"
         tools:layout="@layout/fragment_all_courses" >
         <action
@@ -20,12 +20,12 @@
     </fragment>
     <fragment
         android:id="@+id/announcementsFragment"
-        android:name="com.example.uom.announcements.AnnouncementsFragment"
+        android:name="com.example.uom.Fragment.AnnouncementsFragment"
         android:label="fragment_announcements"
         tools:layout="@layout/fragment_announcements" />
     <fragment
         android:id="@+id/directoryFragment"
-        android:name="com.example.uom.directories.DirectoryFragment"
+        android:name="com.example.uom.Fragment.DirectoryFragment"
         android:label="fragment_directory"
         tools:layout="@layout/fragment_directory" >
         <action
@@ -46,11 +46,31 @@
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.example.uom.utils.WebViewFragment"
+        android:name="com.example.uom.Fragment.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view" >
         <argument
             android:name="url"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.uom.Fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_toStart"
+            app:destination="@+id/mainActivity" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
+        app:launchSingleTop="true"
+        app:popUpTo="@+id/nav_graph"
+        app:popUpToInclusive="true" />
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.uom.MainActivity"
+        android:label="MainActivity"
+        tools:layout="@layout/activity_main"/>
 </navigation>

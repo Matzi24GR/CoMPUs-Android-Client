@@ -1,4 +1,4 @@
-package com.example.uom.directories
+package com.example.uom.Fragment
 
 
 import android.content.Context
@@ -13,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Adapter.DirectoryListAdapter
+import com.example.uom.Class.ItemClass
 import com.example.uom.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.uom.directories
+package com.example.uom.Class
 
 import org.jsoup.nodes.Element
 

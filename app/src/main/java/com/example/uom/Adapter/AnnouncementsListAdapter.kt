@@ -1,4 +1,4 @@
-package com.example.uom.announcements
+package com.example.uom.Adapter
 
 import android.content.Context
 import android.text.util.Linkify
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Repository.AnnouncementRepository
 import com.example.uom.Database.Announcement
 import com.example.uom.R
 import java.text.SimpleDateFormat

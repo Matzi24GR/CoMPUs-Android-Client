@@ -1,9 +1,8 @@
-package com.example.uom.announcements
+package com.example.uom.Repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.uom.Database.Announcement
-import com.example.uom.Database.AnnouncementDAO
 import com.example.uom.Database.Course
 import com.example.uom.Database.UomDatabase
 import kotlinx.coroutines.*

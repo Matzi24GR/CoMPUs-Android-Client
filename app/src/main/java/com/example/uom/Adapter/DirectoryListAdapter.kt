@@ -1,4 +1,4 @@
-package com.example.uom.directories
+package com.example.uom.Adapter
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.uom.Class.ItemClass
 import com.example.uom.R
 
 class DirectoryListAdapter internal constructor(val context: Context, val array: ArrayList<ItemClass>): RecyclerView.Adapter<DirectoryListAdapter.DirectoryViewHolder>(){

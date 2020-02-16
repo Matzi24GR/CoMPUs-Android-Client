@@ -1,4 +1,4 @@
-package com.example.uom.courses
+package com.example.uom.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater
