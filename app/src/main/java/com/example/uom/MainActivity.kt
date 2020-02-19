@@ -9,9 +9,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.*
 import com.example.uom.Database.UomDatabase
 import com.example.uom.Repository.AnnouncementRepository
 import com.example.uom.Repository.CourseRepository
+import com.example.uom.Worker.AnnouncementWorker
 import com.example.uom.utils.AllTrustingTrustManager
 import com.example.uom.utils.refreshSecondaryCookie
 import com.google.android.material.badge.BadgeDrawable
@@ -20,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -65,12 +68,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Work Manager Sync for announcements
-//        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-//        val announcementRefreshWork = PeriodicWorkRequestBuilder<AnnouncementWorker>(
-//                30,TimeUnit.MINUTES,
-//                15,TimeUnit.MINUTES
-//        ).setConstraints(constraints).build()
-//        WorkManager.getInstance(this).enqueue(announcementRefreshWork)
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val announcementRefreshWork = PeriodicWorkRequestBuilder<AnnouncementWorker>(
+                30, TimeUnit.MINUTES,
+                15,TimeUnit.MINUTES
+        ).setConstraints(constraints).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("SyncAnnouncements",ExistingPeriodicWorkPolicy.KEEP,announcementRefreshWork)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -1,11 +1,15 @@
 package com.example.uom.Repository
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.example.uom.Database.Announcement
 import com.example.uom.Database.Course
 import com.example.uom.Database.UomDatabase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -22,7 +26,7 @@ class AnnouncementRepository(val context: Context) {
     suspend fun insertAnnouncement(announcement: Announcement) {
         announcementDAO.insert(announcement)
     }
-
+//TODO check if running before calling
     suspend fun refreshAnnouncements() {
         val courses: List<Course> = UomDatabase.getDatabase(context).CourseDao().getAllCoursesStatic()
 
@@ -57,15 +61,16 @@ class AnnouncementRepository(val context: Context) {
     }
 
     private suspend fun getAnnouncements(cookie: String, courses: List<Course>, id: Int): Document? {
+        Log.i("AnnouncementRepository","getting "+courses[id].titleStr+" announcements")
         return GlobalScope.async(Dispatchers.IO) {
             var document: Document? = null
             try {
-                delay((100..200).random().toLong())
+                //delay(10)
                 Jsoup.connect(courses[id].Url)
                         .cookie("PHPSESSID", cookie)
                         .method(Connection.Method.GET)
                         .execute()
-                delay((50..150).random().toLong())
+                //delay(10)
                 val response = Jsoup.connect("http://compus.uom.gr/modules/anns/anns.php")
                         .cookie("PHPSESSID", cookie)
                         .method(Connection.Method.GET)
