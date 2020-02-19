@@ -19,7 +19,7 @@ class CourseRepository(private val context: Context) {
     }
 
     suspend fun refreshCourses() {
-            val document = fetchSite(context,"https://compus.uom.gr/index.php")
+            val document = DocumentFetcher.fetchSite(context,"https://compus.uom.gr/index.php")
             if (document != null && document.html().contains("Τα Μαθήματά Μου")) {
                 //Show User Name
                 val user = document.select("td[class=info_user]").text()

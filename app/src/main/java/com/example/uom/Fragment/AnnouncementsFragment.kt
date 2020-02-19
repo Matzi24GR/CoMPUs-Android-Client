@@ -11,11 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.uom.Repository.AnnouncementRepository
-import com.example.uom.ViewModel.AnnouncementViewModel
 import com.example.uom.Adapter.AnnouncementsListAdapter
 import com.example.uom.R
-import kotlinx.coroutines.*
+import com.example.uom.Repository.AnnouncementRepository
+import com.example.uom.ViewModel.AnnouncementViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class AnnouncementsFragment : Fragment() {

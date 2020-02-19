@@ -4,12 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "announcements_table")
-data class Announcement(val announcement: String, val time: Long, val courseString: String) {
+data class Announcement(val text: String, val time: Long, val course: String) {
     @PrimaryKey
-    var id = time.toString()+courseString
-
-    var text = announcement
-    var timestamp = time
-    var course = courseString
+    var id = time.toString()+course
     var isRead = false
 }

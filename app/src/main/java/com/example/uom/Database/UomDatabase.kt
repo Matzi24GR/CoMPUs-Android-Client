@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
-@Database(entities = arrayOf(Announcement::class,Course::class), version = 6, exportSchema = false)
+@Database(entities = arrayOf(Announcement::class,Course::class), version = 7, exportSchema = false)
 abstract class UomDatabase : RoomDatabase() {
 
     abstract fun AnnouncementDAO(): AnnouncementDAO

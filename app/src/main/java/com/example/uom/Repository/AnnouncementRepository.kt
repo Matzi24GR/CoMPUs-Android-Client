@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import com.example.uom.Database.Announcement
 import com.example.uom.Database.Course
 import com.example.uom.Database.UomDatabase
+import com.example.uom.utils.DocumentFetcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -22,18 +23,30 @@ class AnnouncementRepository(val context: Context) {
     // Observed LiveData will notify the observer when the data has changed.
     private val announcementDAO = UomDatabase.getDatabase(context).AnnouncementDAO()
     val allAnnouncements: LiveData<List<Announcement>> = announcementDAO.getAllAnnouncements()
+    private val newIdsArrayList: ArrayList<Long> = arrayListOf()
+    val newAnnouncements: List<Announcement> = getAnnouncementsByIds(newIdsArrayList)
+    val newCount = newIdsArrayList.size
     val unreadCount: LiveData<Int> = announcementDAO.getUnreadCount()
-    suspend fun insertAnnouncement(announcement: Announcement) {
-        announcementDAO.insert(announcement)
+
+    fun getAnnouncementsByIds(arrayList: ArrayList<Long>):List<Announcement>{
+        val list = mutableListOf<Announcement>()
+        for (i in arrayList.indices)
+            list[i] = announcementDAO.getAnnouncementFromId(arrayList[i])
+        return list
     }
-//TODO check if running before calling
+
+    suspend fun insertAnnouncement(announcement: Announcement):Long {
+        return announcementDAO.insert(announcement)
+    }
+
     suspend fun refreshAnnouncements() {
+        newIdsArrayList.clear()
         val courses: List<Course> = UomDatabase.getDatabase(context).CourseDao().getAllCoursesStatic()
 
         val cookie = context.getSharedPreferences("CREDENTIALS",Context.MODE_PRIVATE).getString("cookie",null)
 
         for (i in courses.indices) {
-            var document2 = getAnnouncements(cookie!!, courses, i) ?: continue
+            var document2 = DocumentFetcher.getAnnouncements(cookie!!,courses[i]) ?: continue
             var html = document2.html()
             html = html.replace("<br>", "!@#$")
             document2 = Jsoup.parse(html)
@@ -50,7 +63,10 @@ class AnnouncementRepository(val context: Context) {
                 text = text.replace("\\d\\d.\\d\\d.\\d\\d\\d\\d \\d\\d:\\d\\d ".toRegex(), "")
 
                 //Add to database
-                insertAnnouncement(Announcement(text, date.time, courses[i].Title))
+                val  id: Long = insertAnnouncement(Announcement(text, date.time, courses[i].Title))
+                if (id != -1L) {
+                    newIdsArrayList.add(id)
+                }
             }
         }
     }
