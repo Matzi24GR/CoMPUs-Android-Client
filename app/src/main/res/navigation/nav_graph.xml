@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/allCoursesFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/allCoursesFragment"
@@ -73,4 +73,9 @@
         android:name="com.example.uom.MainActivity"
         android:label="MainActivity"
         tools:layout="@layout/activity_main"/>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.uom.Fragment.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
 </navigation>
